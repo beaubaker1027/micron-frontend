@@ -4,55 +4,73 @@ span {
 #infoContainer{
   box-sizing: border-box;
   border: 2px black solid;
-  margin:0 auto;
   max-width: 500px;
 }
-.bottom-border-big{
+.bbb{
   border-bottom: 10px black solid;
 }
-.bottom-border-small{
+.bbs{
   border-bottom: 1px black solid
 }
-.bottom-border-medium{
+.bbm{
   border-bottom: 5px black solid
 }
-.infoHeader {
+#infoHeader {
 }
 .info{
   width:100%;
 }
 
-.infoBody:last-child{
+#infoBody:last-child{
   border-bottom: none;
 }
 
-.font-bold-larger{
-  font-size: 45px;
+.fwb{
   font-weight: bolder;
 }
-.font-default{
-  font-size: 20px;
+
+.fwm{
   font-weight: normal;
 }
-.font-bold-default{
-  font-size:20px;
-  font-weight: bolder;
+
+.fsl{
+  font-size: 45px;
 }
-.font-bold-smaller{
-  font-weight: bolder;
+.fsm{
+  font-size: 20px;
+}
+.fss{
   font-size: 15px;
 }
-.padding-small{
+.phs{
   padding: 0 5px;
+}
+.pls {
+  padding-left: 15px;
+}
+.mts{
+  margin-top: 5px;
+}
+.mha{
+  margin-left: auto;
+  margin-right: auto;
 }
 .flex-block{
   display: flex;
 }
 .content{
 }
-.right{
+.f-1{
   flex:1;
+}
+.txtar{
   text-align: right;
+}
+.txtal{
+  text-align: left;
+}
+.dib {
+  display: inline-block;
 }
 
 @media only screen and (max-width: 500px){
