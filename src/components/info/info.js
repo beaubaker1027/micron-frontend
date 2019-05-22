@@ -1,32 +1,22 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router";
-import Header from '../header/header';
-import Nutrients from '../nutrients/nutrients';
+import Header from "../header/header";
+import Nutrients from "../nutrients/nutrients";
 import "./styles.css";
-import "../../services/sorting/merge-sort";
+import mergeSort from "../../services/sorting/merge-sort";
+import binarySearch from "../../services/searching/binary-search";
 
-let nutrient = ['204', '601', '307', '205', '203']
-
-//until sorting and searching algorithms are implemented
 let nutrientIndex = [
-  {index:'2',
-   sub:false},
-  {index:'11',
-   sub:true},
-  {index:'12',
-   sub:true},
-  {index:'13',
-   sub:false,},
-  {index:'8',
-   sub:false,},
-  {index:'3',
-   sub:false,},
-  {index:'4',
-   sub:true},
-  {index:'5',
-   sub:true},
-  {index:'1',
-   sub:false}]
+  { id: 204, sub: false },
+  { id: 606, sub: true },
+  { id: 605, sub: true },
+  { id: 601, sub: false },
+  { id: 307, sub: false },
+  { id: 205, sub: false },
+  { id: 269, sub: true },
+  { id: 291, sub: true },
+  { id: 203, sub: false }
+];
 class Info extends Component {
   constructor(props) {
     super(props);
@@ -38,13 +28,14 @@ class Info extends Component {
   }
 
   async componentDidMount() {
-    if(!this.id) { return; }
+    if (!this.id) {
+      return;
+    }
     await fetch(`http://localhost:5000/usda-api/retrieve?id=${this.id}`)
       .then(response => response.json())
       .then(responseJson => {
         if (!responseJson.success) {
           console.error(responseJson.error);
-          alert('Error: ',responseJson.error);
           return <Redirect to="/search" />;
         }
         let { report } = responseJson.data;
@@ -56,21 +47,36 @@ class Info extends Component {
       .catch(error => console.error(error));
   }
 
-  parseNutrients = (nutrients)=>{
-    return nutrientIndex.map((val, key)=>{
-      let {index, sub} = val
-      return(<Nutrients data={nutrients[index]} sub={sub} key={key}/>)
-    })
-  }
+  findCalories = (nutrients, id) => {
+    let calories = nutrients.find(obj => {
+      return obj.nutrient_id === id;
+    });
+    if (calories) {
+      return calories.value;
+    }
+    return "N/A";
+  };
+
+  parseNutrients = nutrients => {
+    let sorted = mergeSort(nutrients, "nutrient_id");
+    return nutrientIndex.map((val, key) => {
+      let { id, sub } = val;
+
+      let nutrient = binarySearch(sorted, "nutrient_id", id);
+      if (!nutrient) {
+        return;
+      }
+      return <Nutrients data={nutrient} sub={sub} key={key} />;
+    });
+  };
 
   render() {
-    console.log(this.state.data);
-    if(!this.state.data) {
-      return(<div>loading...</div>)
+    if (!this.state.data) {
+      return <div>loading...</div>;
     }
-    let { fg, name, sd, manu, nutrients, ing} = this.state.data;
+    let { fg, name, sd, manu, nutrients, ing } = this.state.data;
     return (
-      <div style={{height:'100vh'}}>
+      <div style={{ height: "100vh" }}>
         <Header />
         <div id="infoContainer" className="phs mha mts">
           <div id="infoHeader" className="info bbb">
@@ -83,22 +89,18 @@ class Info extends Component {
               <label className="fss fwb">Amount Per 100g</label>
             </span>
             <span>
-              <label className="fsm fwb">Calories</label>&nbsp;<label className="fsm fwm">{nutrients[0].value}</label>
+              <label className="fsm fwb">Calories</label>&nbsp;
+              <label className="fsm fwm">
+                {this.findCalories(nutrients, "208")}
+              </label>
             </span>
           </div>
           <div id="infoBody" className="infoBody info bbb">
-              {
-                this.parseNutrients(nutrients)
-              }
+            {this.parseNutrients(nutrients)}
           </div>
           <div className="infoFooter info">
             <label className="font-default">Ingredients</label>
-            {
-              ing?
-              <span>{ing.desc}</span>
-              :
-              <span>N/A</span>
-            }
+            {ing ? <span>{ing.desc}</span> : <span>N/A</span>}
           </div>
         </div>
       </div>
