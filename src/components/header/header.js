@@ -4,7 +4,14 @@ import PropTypes from "prop-types";
 
 export default function Header(props) {
   return (
-    <div className="header" style={{ backgroundColor: "black" }}>
+    <div
+      className="header"
+      style={{
+        backgroundColor: "black",
+        height: "5vh",
+        boxSizing: "border-box"
+      }}
+    >
       <Link to={props.enabled ? "/" : ""}>
         <h1
           class="block title"

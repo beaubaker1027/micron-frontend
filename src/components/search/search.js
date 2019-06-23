@@ -1,12 +1,14 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Header from "../header/header";
+import Footer from "../footer/footer";
+import Loading from "../loading/loading";
 import { debounce } from "lodash";
 import "./styles.css";
 
-const numColumns = 1;
+//const numColumns = 1;
 
-const formatLastRow = (data, columns) => {
+/*const formatLastRow = (data, columns) => {
   if (columns <= 1) {
     return data;
   }
@@ -17,34 +19,49 @@ const formatLastRow = (data, columns) => {
     data.push({ empty: true });
   }
   return data;
-};
+};*/
 
 class Search extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      inputValue: "",
-      max: undefined,
-      placeholder: "Food Search"
-    };
   }
 
+  state = {
+    inputValue: "",
+    max: undefined,
+    placeholder: "Food Search"
+  };
+  timeout;
+
   fetchData = async (text, max = 15) => {
+    this.timeout = setTimeout(() => {
+      this.setState({ error: "This query is taking longer than expected" });
+    }, 3000);
     await fetch(
-      `${process.env.REACT_APP_FETCH_ALL_API_ENDPOINT}query=${text}&max${max}`
+      `${process.env.REACT_APP_FETCH_ALL_API_ENDPOINT}query=${text}&max=${max}`
     )
-      .then(response => response.json())
+      .then(response => {
+        return response.json();}
+      })
       .then(responseJson => {
-        console.log(responseJson);
+        clearTimeout(this.timeout);
         if (!responseJson.success) {
-          this.setState({ status: false });
+          let error = responseJson.error;
+          error = error.split(".");
+          error = error.join(".  ");
+          throw new Error(error);
         }
-        this.setState({
-          status: true,
+        return this.setState({
+          error: undefined,
           data: responseJson.data
         });
       })
-      .catch(error => console.error(error));
+      .catch(error => {
+        return this.setState({
+          error: error.message,
+          data: {}
+        });
+      });
   };
 
   onChangeText = debounce((input, options, callback) => {
@@ -74,16 +91,16 @@ class Search extends Component {
         </span>
       );
     }
-    let { list } = data;
-    let { item } = list;
+    let { list = {} } = data;
+    let { item = undefined } = list;
     if (!list || !item) {
       return;
     }
-    item = formatLastRow(item, numColumns);
+    //item = formatLastRow(item, numColumns);
     return item.map((food, key) => {
-      if (food.empty) {
+      /*if (food.empty) {
         return <div class="content" style={{ opacity: "0" }} key={key} />;
-      }
+      }*/
       let { name, group, ndbno } = food;
       //name = name.split(',')[0];
       let link = `/info/${ndbno}`;
@@ -127,7 +144,8 @@ class Search extends Component {
                 this.setState(
                   {
                     results: this.input.value.length > 0 ? true : false,
-                    search: this.input.value.length >= 3 ? true : false
+                    search: this.input.value.length >= 3 ? true : false,
+                    error: undefined
                   },
                   this.onChangeText(
                     this.input,
@@ -143,10 +161,15 @@ class Search extends Component {
           {this.state.results ? (
             <div className="contentContainer">
               <ul className="contentList">
+                {this.state.error && (
+                  <span className="informer">{this.state.error}</span>
+                )}
                 {this.state.data ? (
                   this.renderListItems(this.state.data)
                 ) : this.state.search ? (
-                  <span className="informer">loading...</span>
+                  <span className="informer">
+                    <Loading />
+                  </span>
                 ) : (
                   <span className="informer">
                     Search Must Be Atleast 3 Characters
@@ -158,7 +181,7 @@ class Search extends Component {
             undefined
           )}
         </div>
-        <div style={{ backgroundColor: "black", minHeight: "50px" }} />
+        {<Footer />}
       </div>
     );
   }

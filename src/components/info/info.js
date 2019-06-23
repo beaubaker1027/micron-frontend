@@ -31,7 +31,9 @@ class Info extends Component {
     if (!this.id) {
       return;
     }
-    await fetch(`http://localhost:5000/usda-api/retrieve?id=${this.id}`)
+    await fetch(
+      `${process.env.REACT_APP_FETCH_SINGLE_API_ENDPOINT}id=${this.id}`
+    )
       .then(response => response.json())
       .then(responseJson => {
         if (!responseJson.success) {
