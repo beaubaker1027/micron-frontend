@@ -1,11 +1,7 @@
 import React, { Component } from "react";
-import generateNewBarcodeData from "../../services/lib/barcode";
+import generateNewBarcodeData from "../../lib/lib/barcode";
 
 export default class MyComponent extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   state = {
     barcodeData: []
   };
@@ -38,7 +34,6 @@ export default class MyComponent extends Component {
       <div
         style={{
           width: "200px",
-          minHeight: 200 + "px",
           margin: "0 auto",
           display: "flex",
           justifyContent: "space-between",

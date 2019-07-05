@@ -4,28 +4,10 @@ import Header from "../header/header";
 import Footer from "../footer/footer";
 import Loading from "../loading/loading";
 import { debounce } from "lodash";
+import { fetchAllResultsAsync } from "../../services/micron/fetch";
 import "./styles.css";
 
-//const numColumns = 1;
-
-/*const formatLastRow = (data, columns) => {
-  if (columns <= 1) {
-    return data;
-  }
-  let dividend = Math.ceil(data.length / columns);
-  let nextHighestMultiple = dividend * columns;
-  let remainder = Math.floor(nextHighestMultiple % data.length);
-  for (let i = 0; i < remainder; i++) {
-    data.push({ empty: true });
-  }
-  return data;
-};*/
-
 class Search extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   state = {
     inputValue: "",
     max: undefined,
@@ -37,18 +19,15 @@ class Search extends Component {
     this.timeout = setTimeout(() => {
       this.setState({ error: "This query is taking longer than expected" });
     }, 3000);
-    await fetch(
-      `${process.env.REACT_APP_FETCH_ALL_API_ENDPOINT}query=${text}&max=${max}`
-    )
-      .then(response => {
-        return response.json();}
-      })
+    await fetchAllResultsAsync(text, max)
       .then(responseJson => {
         clearTimeout(this.timeout);
         if (!responseJson.success) {
           let error = responseJson.error;
-          error = error.split(".");
-          error = error.join(".  ");
+          error = error
+            .split(".")
+            .join(". ")
+            .replace("parameters", "search term");
           throw new Error(error);
         }
         return this.setState({
@@ -96,13 +75,8 @@ class Search extends Component {
     if (!list || !item) {
       return;
     }
-    //item = formatLastRow(item, numColumns);
     return item.map((food, key) => {
-      /*if (food.empty) {
-        return <div class="content" style={{ opacity: "0" }} key={key} />;
-      }*/
       let { name, group, ndbno } = food;
-      //name = name.split(',')[0];
       let link = `/info/${ndbno}`;
       return (
         <div class="content" key={key}>

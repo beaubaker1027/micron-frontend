@@ -1,6 +1,6 @@
 import React from "react";
-import PropTypes from "prop-types";
-import { version, author } from "../../../package.json";
+import { Link } from "react-router-dom";
+import { version } from "../../../package.json";
 
 export default function Footer(props) {
   return (
@@ -18,10 +18,10 @@ export default function Footer(props) {
         color: "white"
       }}
     >
-      <span style={{ display: "inline-block" }}>Created by {author}</span>
+      <span style={{ display: "inline-block" }}>
+        <Link to={"/about"}>About</Link>
+      </span>
       <span style={{ display: "inline-block" }}>v{version}</span>
     </footer>
   );
 }
-
-Footer.propTypes = {};

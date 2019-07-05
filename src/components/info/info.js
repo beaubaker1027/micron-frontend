@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router";
 import Header from "../header/header";
+import Footer from "../footer/footer";
 import Nutrients from "../nutrients/nutrients";
 import "./styles.css";
-import mergeSort from "../../services/sorting/merge-sort";
-import binarySearch from "../../services/searching/binary-search";
+import { fetchOneResultAsync } from "../../services/micron/fetch";
+import mergeSort from "../../lib/sorting/merge-sort";
+import binarySearch from "../../lib/searching/binary-search";
 
 let nutrientIndex = [
   { id: 204, sub: false },
@@ -31,13 +33,9 @@ class Info extends Component {
     if (!this.id) {
       return;
     }
-    await fetch(
-      `${process.env.REACT_APP_FETCH_SINGLE_API_ENDPOINT}id=${this.id}`
-    )
-      .then(response => response.json())
+    await fetchOneResultAsync(this.id)
       .then(responseJson => {
         if (!responseJson.success) {
-          console.error(responseJson.error);
           return <Redirect to="/search" />;
         }
         let { report } = responseJson.data;
@@ -66,7 +64,7 @@ class Info extends Component {
 
       let nutrient = binarySearch(sorted, "nutrient_id", id);
       if (!nutrient) {
-        return;
+        return undefined;
       }
       return <Nutrients data={nutrient} sub={sub} key={key} />;
     });
@@ -78,33 +76,38 @@ class Info extends Component {
     }
     let { fg, name, sd, manu, nutrients, ing } = this.state.data;
     return (
-      <div style={{ height: "100vh" }}>
+      <div
+        style={{ height: "100vh", display: "flex", flexDirection: "column" }}
+      >
         <Header />
-        <div id="infoContainer" className="phs mha mts">
-          <div id="infoHeader" className="info bbb">
-            <span className="fsl fwb">{name}</span>
-            <span className="fd">{sd}</span>
-            <span className="fsm fwm">{fg || manu}</span>
-          </div>
-          <div id="infoSubHeader" className="infoSubHeader info bbm">
-            <span className="bbs">
-              <label className="fss fwb">Amount Per 100g</label>
-            </span>
-            <span>
-              <label className="fsm fwb">Calories</label>&nbsp;
-              <label className="fsm fwm">
-                {this.findCalories(nutrients, "208")}
-              </label>
-            </span>
-          </div>
-          <div id="infoBody" className="infoBody info bbb">
-            {this.parseNutrients(nutrients)}
-          </div>
-          <div className="infoFooter info">
-            <label className="font-default">Ingredients</label>
-            {ing ? <span>{ing.desc}</span> : <span>N/A</span>}
+        <div style={{ flexGrow: "1" }}>
+          <div id="infoContainer" className="phs mha mts">
+            <div id="infoHeader" className="info bbb">
+              <span className="fsl fwb">{name}</span>
+              <span className="fd">{sd}</span>
+              <span className="fsm fwm">{fg || manu}</span>
+            </div>
+            <div id="infoSubHeader" className="infoSubHeader info bbm">
+              <span className="bbs">
+                <label className="fss fwb">Amount Per 100g</label>
+              </span>
+              <span>
+                <label className="fsm fwb">Calories</label>&nbsp;
+                <label className="fsm fwm">
+                  {this.findCalories(nutrients, "208")}
+                </label>
+              </span>
+            </div>
+            <div id="infoBody" className="infoBody info bbb">
+              {this.parseNutrients(nutrients)}
+            </div>
+            <div className="infoFooter info">
+              <label className="font-default">Ingredients</label>
+              {ing ? <span>{ing.desc}</span> : <span>N/A</span>}
+            </div>
           </div>
         </div>
+        <Footer />
       </div>
     );
   }
