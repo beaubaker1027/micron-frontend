@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import { Link } from "react-router-dom";
 import Header from "../header/header";
 import Footer from "../footer/footer";
@@ -7,7 +7,7 @@ import { debounce } from "lodash";
 import { fetchAllResultsAsync } from "../../services/micron/fetch";
 import "./styles.css";
 
-class Search extends Component {
+class Search extends PureComponent {
   state = {
     inputValue: "",
     max: undefined,
@@ -79,7 +79,7 @@ class Search extends Component {
       let { name, group, ndbno } = food;
       let link = `/info/${ndbno}`;
       return (
-        <div class="content" key={key}>
+        <div className="content" key={key}>
           <span>
             <Link to={link}>{name}</Link>
           </span>
@@ -91,21 +91,23 @@ class Search extends Component {
 
   render() {
     return (
-      <div style={{ height: "100vh" }}>
+      <div
+        style={{ height: "100vh", display: "flex", flexDirection: "column" }}
+      >
         <Header enabled={false} />
         <div
           className="viewPort"
           style={{
+            flexGrow: "1",
             overflow: "auto",
-            boxSizing: "border-box",
-            minHeight: "90vh",
-            maxHeight: "90vh"
+            padding: "15px 0",
+            boxSizing: "border-box"
           }}
         >
           <div style={{ textAlign: "center" }}>
             <input
               id="searchInput"
-              class="block"
+              className="block"
               ref={ref => (this.input = ref)}
               placeholder={this.state.placeholder}
               onFocus={() => {

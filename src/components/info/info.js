@@ -25,7 +25,8 @@ class Info extends Component {
     let { id } = props.match.params;
     this.id = id;
     this.state = {
-      data: undefined
+      data: undefined,
+      error: undefined
     };
   }
 
@@ -44,7 +45,10 @@ class Info extends Component {
           data: food
         });
       })
-      .catch(error => console.error(error));
+      .catch(error => {
+        let { message } = error;
+        this.setState({ error: message ? message : error });
+      });
   }
 
   findCalories = (nutrients, id) => {
@@ -71,6 +75,19 @@ class Info extends Component {
   };
 
   render() {
+    if (this.state.error) {
+      return (
+        <div
+          style={{ height: "100vh", display: "flex", flexDirection: "column" }}
+        >
+          <Header />
+          <div style={{ flexGrow: "1" }}>
+            <span className="informer">{this.state.error}</span>
+          </div>
+          <Footer />
+        </div>
+      );
+    }
     if (!this.state.data) {
       return <div>loading...</div>;
     }
@@ -80,7 +97,7 @@ class Info extends Component {
         style={{ height: "100vh", display: "flex", flexDirection: "column" }}
       >
         <Header />
-        <div style={{ flexGrow: "1" }}>
+        <div style={{ flexGrow: "1", overflow: "auto", padding: "15px 0" }}>
           <div id="infoContainer" className="phs mha mts">
             <div id="infoHeader" className="info bbb">
               <span className="fsl fwb">{name}</span>
