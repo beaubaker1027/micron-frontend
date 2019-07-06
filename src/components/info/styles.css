@@ -1,22 +1,16 @@
 span {
   display: block;
 }
+
 #infoContainer{
   box-sizing: border-box;
   border: 2px black solid;
-  max-width: 500px;
+  max-width: 400px;
 }
-.bbb{
-  border-bottom: 10px black solid;
-}
-.bbs{
-  border-bottom: 1px black solid
-}
-.bbm{
-  border-bottom: 5px black solid
-}
+
 #infoHeader {
 }
+
 .info{
   width:100%;
 }
@@ -25,56 +19,9 @@ span {
   border-bottom: none;
 }
 
-.fwb{
-  font-weight: bolder;
-}
-
-.fwm{
-  font-weight: normal;
-}
-
-.fsl{
-  font-size: 45px;
-}
-.fsm{
-  font-size: 20px;
-}
-.fss{
-  font-size: 15px;
-}
-.phs{
-  padding: 0 5px;
-}
-.pls {
-  padding-left: 15px;
-}
-.mts{
-  margin-top: 5px;
-}
-.mha{
-  margin-left: auto;
-  margin-right: auto;
-}
-.flex-block{
-  display: flex;
-}
-.content{
-}
-.f-1{
-  flex:1;
-}
-.txtar{
-  text-align: right;
-}
-.txtal{
-  text-align: left;
-}
-.dib {
-  display: inline-block;
-}
-
+/*media queries*/
 @media only screen and (max-width: 500px){
   #infoContainer{
-    width:100%;
+    width:90%;
   }
 }

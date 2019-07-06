@@ -1,17 +1,12 @@
 import React, { PureComponent } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
+import "./styles.css";
 
 export default class Header extends PureComponent {
   render() {
     return (
-      <div
-        className="header"
-        style={{
-          backgroundColor: "black",
-          minHeight: "5vh"
-        }}
-      >
+      <div className="header">
         <Link style={{ padding: "5px 0" }} to={this.props.enabled ? "/" : ""}>
           <h1
             className="block title"

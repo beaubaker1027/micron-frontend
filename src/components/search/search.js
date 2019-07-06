@@ -79,12 +79,10 @@ class Search extends PureComponent {
       let { name, group, ndbno } = food;
       let link = `/info/${ndbno}`;
       return (
-        <div className="content" key={key}>
-          <span>
-            <Link to={link}>{name}</Link>
-          </span>
+        <Link className="content" to={link} key={key}>
+          <span>{name}</span>
           <span>{group}</span>
-        </div>
+        </Link>
       );
     });
   };

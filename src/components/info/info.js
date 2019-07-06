@@ -97,7 +97,10 @@ class Info extends Component {
         style={{ height: "100vh", display: "flex", flexDirection: "column" }}
       >
         <Header />
-        <div style={{ flexGrow: "1", overflow: "auto", padding: "15px 0" }}>
+        <div
+          className="screenContainer"
+          style={{ flexGrow: "1", overflow: "auto", padding: "15px 0" }}
+        >
           <div id="infoContainer" className="phs mha mts">
             <div id="infoHeader" className="info bbb">
               <span className="fsl fwb">{name}</span>
@@ -120,7 +123,11 @@ class Info extends Component {
             </div>
             <div className="infoFooter info">
               <label className="font-default">Ingredients</label>
-              {ing ? <span>{ing.desc}</span> : <span>N/A</span>}
+              {ing ? (
+                <span className="fss">{ing.desc}</span>
+              ) : (
+                <span className="fss">N/A</span>
+              )}
             </div>
           </div>
         </div>

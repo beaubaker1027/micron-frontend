@@ -1,28 +1,18 @@
 import React, { PureComponent } from "react";
 import { Link } from "react-router-dom";
 import { version } from "../../../package.json";
+import "./styles.css";
 
 export default class Footer extends PureComponent {
   render() {
     return (
-      <footer
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "0 10px",
-          boxSizing: "border-box",
-          margin: 0,
-          height: "5vh",
-          backgroundColor: "black",
-          color: "white"
-        }}
-      >
+      <footer className="footer">
         <span style={{ display: "inline-block" }}>
-          <Link to={"/about"}>About</Link>
+          <Link className="fsm fwb" to={"/about"}>
+            About
+          </Link>
         </span>
-        <span style={{ display: "inline-block" }}>v{version}</span>
+        <span className="fsm fwb dib">v{version}</span>
       </footer>
     );
   }
